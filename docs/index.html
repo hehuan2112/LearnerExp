@@ -1,1 +1,1136 @@
-<h1>Hi, this is LearnerExp</h1>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>LearnerExp</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="./static/lib/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- D3.js -->
+<link rel="stylesheet" href="./static/lib/d3.js/d3-context-menu.css">
+<!-- LearnerExp -->
+<link rel="stylesheet" href="./static/css/main.css">
+</head>
+<body>
+<div id="wrapper">
+
+<div id="sysmsg">
+    <div id="sysmsg-close" onclick="close_sysmsg();" title="close this message box"><i class="fa fa-close"></i></div>
+    <div id="sysmsg-text"></div>
+</div>
+
+<div id="header-bar">
+    <img src="./static/img/logo.png" style="width:100px;">&nbsp;
+    <label>Course: </label>
+    <select id="sel-courseid" style="width: 140px;">
+        <option selected="selected" value="161">GX001.1 English I</option>
+        <option value="162">GX001.2 English II</option>
+    </select>
+    <label>Year: </label>
+    <select id="sel-year">
+        <option selected="selected" value="2015">2015</option>
+        <option value="2015">2016</option>
+        <option value="2015">2017</option>
+    </select>
+    <a href="javascript:load_data();" title="load data by course and year">
+        <i class="fa fa-refresh"></i>
+    LOAD
+    </a> | 
+    <a href="javascript:clear_all();" title="clear all groups and figures">
+        <i class="fa fa-trash-o"></i>
+        CLEAR ALL
+    </a>
+</div>
+
+<div id="left-pane">
+    <p>
+        <span class="h2">
+            <i class="fa fa-users"></i> Group List |
+        </span>
+        <a class="btn-sm" href="javascript:;" title="create a new group by combining selected groups">
+            <i class="fa fa-gg"></i> Union
+        </a>
+        <a class="btn-sm" href="javascript:;" title="create a new group of intersections">
+            <i class="fa fa-clone"></i> Inter
+        </a>
+    </p>
+
+    <p style="margin: 3px 0 10px 0;">
+        <a class="btn-sm btn-explore" href="javascript:explore_checked_groups();" title="explore the selected groups">
+            <i class="fa fa-search"></i> Explore
+        </a>
+        <a class="btn-sm" href="javascript:clear_temporary_group_list();" title="clear the temporary group list">
+            <i class="fa fa-user-times"></i> Clr Tmp
+        </a>
+    </p>
+    
+    <p>
+        <span class="h3">
+            <i class="fa fa-star"></i> Saved Groups
+        </span>
+    </p>
+
+    <div id="saved-group-items" class="group-items">
+    </div>
+
+    <p>
+        <span class="h3">
+            <i class="fa fa-shopping-basket"></i> Temporary Groups
+        </span>
+    </p>
+
+    <div id="temporary-group-items" class="group-items">
+    </div>
+</div>
+
+<div id="main">
+
+<div id="scatter-pane">
+
+<div id="scatter-tool">
+<span class="h2">
+    <i class="fa fa-object-group"></i>
+    Learner Overview |
+</span>
+X: 
+<select id="scatter-x">
+    <option value="iAR">Attendance Rate</option>
+</select>
+<a href="javascript:switch_axis();" style="font-size: 1.4em;"> 
+    <i class="fa fa-arrows-h"></i> 
+</a>
+Y: 
+<select id="scatter-y">
+    <option value="iUR">Utilization Rate</option>
+</select> |
+
+<a class="btn-sm" href="javascript:check_scatter_axis();draw_scatterchart();mark_groups_scattercharts_on(get_checked_groups_details());">
+    <i class="fa fa-refresh"></i> Update
+</a>
+
+<a class="btn-sm" href="javascript:mark_groups_scattercharts_off();">
+    <i class="fa fa-trash-o"></i> Clean
+</a>
+
+</div>
+<!-- ./scatter-tool -->
+
+<div id="scatter-chart">
+
+</div>
+<!-- ./main-chart -->
+
+</div>
+<!-- ./scatter-pane -->
+
+<div id="group-pane">
+<p>
+    <span class="h2">
+        <i class="fa fa-map-o"></i> Group Comparision | 
+    </span>
+    <a class="btn-sm" href="javascript:clear_groups_boxcharts();">
+        <i class="fa fa-trash-o"></i> Clear
+    </a>
+</p>
+
+<div id="group-parallel">
+    <div id="group-boxchart-0" class="group-boxchart"></div>
+    <div id="group-boxchart-1" class="group-boxchart"></div>
+    <div id="group-boxchart-2" class="group-boxchart"></div>
+    <div id="group-boxchart-3" class="group-boxchart"></div>
+    <div id="group-boxchart-4" class="group-boxchart"></div>
+    <div id="group-boxchart-5" class="group-boxchart"></div>
+</div>
+<!-- ./group-parallel -->
+
+</div>
+<!-- ./group-pane -->
+
+<div id="compare-pane">
+    <div id="compare-tool">
+        <span class="h2">
+            <i class="fa fa-calendar"></i>
+            Activity Calendar |
+        </span>
+        <a class="btn-sm" href="javascript:clear_groups_calcharts();">
+            <i class="fa fa-trash-o"></i> Clear
+        </a>
+    </div>
+    <div id="compare-group-title">
+    </div>
+    <div id="compare-group-lanes-panel">
+        <div id="compare-group-lane-0" class="compare-group-lane gp-bglclr-0"></div>
+        <div id="compare-group-lane-1" class="compare-group-lane gp-bglclr-1"></div>
+        <div id="compare-group-lane-2" class="compare-group-lane gp-bglclr-2"></div>
+        <div id="compare-group-lane-3" class="compare-group-lane gp-bglclr-3"></div>
+        <div id="compare-group-lane-4" class="compare-group-lane gp-bglclr-4"></div>
+        <div id="compare-group-lane-5" class="compare-group-lane gp-bglclr-5"></div>
+    </div>
+</div>
+<!-- ./compare-pane -->
+
+</div>
+<!-- ./main -->
+
+<div id="stu-detail"></div>
+
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED JS SCRIPTS -->
+
+<!-- jQuery 2.2.0 -->
+<script src="./static/lib/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- d3.js v3 -->
+<script src="./static/lib/d3.js/d3.v3.min.js"></script>
+<script src="./static/lib/d3.js/d3-context-menu.js"></script>
+
+<!-- Baidu ECharts -->
+<script src="./static/lib/echarts/4.1.0/echarts.js"></script>
+<script src="./static/lib/echarts/4.1.0/dataTool.js"></script>
+
+<!-- Helpers -->
+<script src="./static/js/util.js"></script>
+
+<!-- my script -->
+<script>
+
+// the config for everything in this page
+var cfg = {
+    url: {
+        // loaddata: '/api/learners',
+        // savegroup: '/api/save_group',
+        // groupcal: '/api/groupcal'
+        loaddata:  './static/data/c{0}-y{1}.json',
+        savegroup: './static/data/save_group.json',
+        groupcal:  './static/img/amcal',
+        default:   './'
+    },
+    random_group_name_length: 4,
+    boxchart: {
+        max_num_boxes: 6,
+        indicators: ['iAR', 'iUR', 
+            'iSLCount', 'iSCCount', 'iSSCount',
+            'iODays', 'iIDays', 'iVTime'
+        ]
+    },
+    scatterchart: {
+        x: 'iODays',
+        y: 'iSCCount',
+        indicator: {
+            'iAR': {'label': 'Attendance Rate', 'xylim': [0, 1]},
+            'iUR': {'label': 'Utilization Rate', 'xylim': [0, 1]},
+            'iSLCount': {'label': 'Student-LMS Count', 'xylim': [0, 600]},
+            'iSCCount': {'label': 'Student-Content Count', 'xylim': [0, 3000]},
+            'iSSCount': {'label': 'Student-Student Count', 'xylim': [0, 300]},
+            'iSICount': {'label': 'Student-Instructor Count', 'xylim': [0, 100]},
+            'iODays': {'label': 'Online Days', 'xylim': [0, 120]},
+            'iIDays': {'label': 'Interval Days', 'xylim': [0, 60]},
+            'iVTime': {'label': 'Viewing Time', 'xylim': [0, 10]},
+            'tsneX' : {'label': 't-SNE X', 'xylim': [-100, 100]},
+            'tsneY' : {'label': 't-SNE Y', 'xylim': [-100, 100]}
+        },
+        flag: {
+            isSelectable: true
+        }
+    },
+    group: {
+        count_limit: 6,
+        status: {
+            TEMPORARY: 0,
+            SAVED: 1,
+            0: 'temporary',
+            1: 'saved'
+        },
+        gl_domid: {
+            0: '#temporary-group-items',
+            1: '#saved-group-items'
+        },
+        colors: [
+            '#1F77B4',
+            '#FF7F0E',
+            '#2CA02C',
+            '#D62728',
+            '#9467BD',
+            '#8C564B',
+            '#E377C2',
+            '#7F7F7F',
+            '#BCBD22',
+            '#17BECF'
+        ]
+    },
+    sysmsg_auto_close_delay: 30
+};
+
+
+
+/** group item show in list
+ * 0: x
+ * 1: y
+ * 2: name
+ * 3: nick
+ * 4: student count
+ * 5: status (0: temporary, 1: saved)
+ */ 
+ var tpl_groupitem = 
+'<div id="groupitem-{2}" class="group-item">' +
+    '<div class="gpi-line0">' +
+        '<input type="checkbox" onclick="on_check_group(this);" class="gp-checkbox" id="gpckb-{0}-{1}-{2}"> ' + 
+        '<span class="gpi-xy" onclick="update_scatter_axis_by(this);" title="Change axis to {0}-{1}">{0} - {1}</span>' +
+    '</div>'+
+    '<div class="gpi-line1">' +
+        '<span id="gpi-name-{2}" class="gpi-name">{2}.{3} {4}</span> ' +
+        '<a id="sv-{2}" class="btn-sm gpi-sv gpi-sv-{5}" onclick="save_temporary_group(this);" title="save this group"><i class="fa fa-star"></i></a> ' +
+        '<a id="rm-{2}" class="btn-sm gpi-rm" onclick="" title="remove this group"><i class="fa fa-minus-circle"></i></a> ' +
+        '<a id="rn-{2}" class="btn-sm gpi-rn" onclick="update_group_nick_by(this)" title="rename this group"><i class="fa fa-cog"></i></a>' +
+    '</div>'+
+'</div>';
+
+// head of student
+// 0: group_seq
+// 1: group_name
+// 2: group stuids count
+var tpl_groupcal_title = 
+'<div class="cmp-glane-header">' +
+'    <span class="gl-icon gp-bgclr-{0}"><i class="fa fa-users"></i></span>'+
+'    <span class="gl-text gp-fgclr-{0} gp-bdclr-{0}">{1} {2}</span>'+
+'</div>';
+
+// calendar 
+// 0 stuid
+// 1 grade point gp
+var tpl_groupcal_calchart = 
+'<div class="cmp-glane-stu" id="cal-{0}" onmouseover="on_over_calchart(this);" onmouseout="on_out_calchart(this);">' +
+'    <div class="cmp-glane-stu-img">' +
+'        <img src="' + cfg.url.groupcal + '/cal-{0}.png">' +
+'    </div>' +
+'    <div class="cmp-glane-stu-info">' +
+'        Pred.GP: {1}' +
+'    </div>' +
+'</div>';
+
+// group data
+var gls = {
+    flag: {
+        isExploring: false
+    },
+    group_list: [],  // all groups
+    checked_group_names: [], // a list of checked groups
+    last: null  // no use
+};
+
+// save the ajax data and student data
+var dt = {
+    raw: null
+};
+
+// The six default boxcharts
+var group_boxcharts = [null, null, null, null, null, null];
+
+function msg(m, level) {
+    if (level == undefined) {
+        level = 'info';
+    }
+    var html = ''+m+'';
+    $('#sysmsg-text').html(html);
+    $('#sysmsg').attr('class', 'msg-'+level).fadeIn(500);
+    
+    // close sysmsg
+    setTimeout('close_sysmsg()', 1000*cfg.sysmsg_auto_close_delay);
+}
+
+function close_sysmsg() {
+    $('#sysmsg').fadeOut(1000);
+}
+
+/**
+ * Clear all on the page
+ */
+function clear_all() {
+    // clear the scatter
+    clear_scatterchart();
+
+    // clear the boxchart
+    clear_groups_boxcharts();
+
+    // clear all group list
+    clear_all_group_list();
+
+    // clear all calchart
+    clear_groups_calcharts();
+}
+
+function clear_explore() {
+    // clear marks on temp list
+    mark_groups_list_off();
+
+    // clear marks
+    mark_groups_scattercharts_off();
+
+    // clear the boxchart
+    clear_groups_boxcharts();
+
+    // clear all calchart
+    clear_groups_calcharts();
+}
+
+// group operations
+function clear_temporary_group_list() {
+    // 1. remove the temporary groups
+    var new_group_list = [];
+    for (var i=0; i<gls.group_list.length; i++) {
+        if (gls.group_list[i].status == 0) {
+            continue;
+        } else {
+            new_group_list.push(gls.group_list[i]);
+        }
+    }
+    gls.group_list = new_group_list;
+
+    // 2. remove the checked
+    dbg('cleared temporary groups');
+
+    draw_groups_listpanel();
+}
+
+function clear_all_group_list() {
+    // remove the saved and temporary groups
+    gls.group_list = [];
+    // remove the checked groups
+    gls.checked_group_names = [];
+    dbg('cleared all groups');
+    // update the flag
+    gls.flag.isExploring = false;
+
+    // update the panel
+    draw_groups_listpanel();
+}
+
+function clear_saved_group_list() {
+
+}
+
+function save_temporary_group(obj) {
+    var btn = $(obj);
+    var group_name = btn.attr('id').split('-')[1];
+    var group = get_group_by_name(group_name);
+
+    // update the status
+    update_group_status_by_name(group_name, 1);
+
+    // move to saved group
+    btn.addClass('gpi-sv-1');
+    btn.parent().parent().appendTo(cfg.group.gl_domid[1]);
+
+    // TODO: persist this modification
+    var courseid = $('#sel-courseid').val();
+    var year = $('#sel-year').val();
+    // $.post(
+    $.get(
+        cfg.url.savegroup, {
+            courseid: courseid,
+            year: year,
+            group: JSON.stringify(group)
+        },
+        function(data) {
+            dbg(data.msg);
+        }, 'json'
+    );
+}
+
+function update_group_nick_by(obj) {
+    var btn = $(obj);
+    var group_name = btn.attr('id').split('-')[1];
+    var group = get_group_by_name(group_name);
+
+    // prompt for new nick
+    var new_nick = window.prompt(
+        'Please input the label for this group ' + group.x + ' - ' + group.y +
+        ' ' + group.name + ': ' + group.nick,
+        group.nick
+    );
+
+    // update the data
+    group.nick = new_nick;
+
+    // update the ui
+    $('#gpi-name-'+group_name).html(group.name + '.' + new_nick + ' ' + group.stuids.length);
+
+    dbg('updated group [' + group.name + '].nick to ' + new_nick);
+}
+
+function create_temporary_group(stuids, x, y) {
+    var name = util.randID(cfg.random_group_name_length);
+    var group = {
+        x: x,
+        y: y,
+        name: name,
+        nick: name,
+        stuids: stuids,
+        status: 0
+    }
+    gls.group_list.push(group);
+    dbg('added temp group ['+group.name+' '+group.stuids.length+']');
+
+    $(cfg.group.gl_domid[0]).append(tpl_groupitem.f(
+        group.x, group.y, group.name, group.nick, 
+        group.stuids.length, group.status
+    ));
+}
+
+function update_group_status_by_name(group_name, status) {
+    for (var i = 0; i < gls.group_list.length; i++) {
+        if (gls.group_list[i].name == group_name) {
+            gls.group_list[i].status = status;
+            dbg('updated status of ' + group_name + ' to ' + status);
+        }
+    }
+}
+
+function get_group_by_name(group_name) {
+    var group = null;
+    for (var i = 0; i < gls.group_list.length; i++) {
+        if (gls.group_list[i].name == group_name) {
+            group = gls.group_list[i];
+            break;
+        }
+    }
+    return group;
+}
+
+function get_group_detals(group) {
+    var data = {
+        group: group,
+        idx_vals: {}
+    };
+    var idxes = Object.keys(cfg.scatterchart.indicator);
+    for (var i=0; i<idxes.length; i++) {
+        var idx = idxes[i];
+        var vals = [];
+        data.idx_vals[idx] = [];
+        for (var j=0; j<group.stuids.length; j++){
+            var stuid = group.stuids[j];
+            data.idx_vals[idx].push(dt.stus[stuid][idx]);
+        }
+    }
+    // dbg('got details of group: ' + data.gp.stuids.name);
+    return data;
+}
+
+// group UI
+
+function draw_groups_listpanel() {
+    // double clear
+    $('#saved-group-items').html('');
+    $('#temporary-group-items').html('');
+
+    for (var i=0; i<gls.group_list.length; i++) {
+        var group = gls.group_list[i];
+        var row = tpl_groupitem.f(
+            group.x, group.y, group.name, group.nick, 
+            group.stuids.length, group.status
+        );
+        $(cfg.group.gl_domid[group.status]).append(row);
+    }
+    dbg('drawn group list panel');
+}
+
+
+function switch_axis() {
+    var tmp = cfg.scatterchart.x;
+    cfg.scatterchart.x = cfg.scatterchart.y;
+    cfg.scatterchart.y = tmp;
+
+    init_axis_selector();
+}
+
+function update_scatter_axis_by(obj) {
+    // console.log(obj);
+    var xy = $(obj).html().split('-');
+    xy[0] = xy[0].trim();
+    xy[1] = xy[1].trim();
+    cfg.scatterchart.x = xy[0];
+    cfg.scatterchart.y = xy[1];
+    $('#scatter-x').val(xy[0]);
+    $('#scatter-y').val(xy[1]);
+    dbg('updated scatter_axis to ' + xy);
+}
+
+function check_scatter_axis() {
+    // update the axis X and Y
+    cfg.scatterchart.x = $('#scatter-x').val();
+    cfg.scatterchart.y = $('#scatter-y').val();
+}
+
+
+function clear_scatterchart() {
+    $('#scatter-chart').html('');
+    dbg('cleared scatter chart');
+}
+
+
+function draw_scatterchart() {
+    // build the data for drawing
+    var data = [];
+    for (var i=0; i<dt.raw.length; i++) {
+        var tmp = [
+            dt.raw[i].stuid, 
+            dt.raw[i][cfg.scatterchart.x], 
+            dt.raw[i][cfg.scatterchart.y]
+        ];
+        data.push(tmp);
+    }
+
+    // clear the old map
+    $('#scatter-chart').html('');
+
+    // draw
+    var xlim = cfg.scatterchart.indicator[cfg.scatterchart.x].xylim;
+    var ylim = cfg.scatterchart.indicator[cfg.scatterchart.y].xylim;
+    var xRange = d3.scale.linear().domain(xlim).range([0, 450])
+    var yRange = d3.scale.linear().domain(ylim).range([450, 0]);
+    var xAxis = d3.svg.axis().scale(xRange).ticks(4).orient("bottom");
+    var yAxis = d3.svg.axis().scale(yRange).ticks(4).orient("left");
+
+    var svg = d3.select('#scatter-chart').append('svg')
+        .attr('width', 500)
+        .attr('height', 500);
+    
+    svg.append('g')
+        .attr('class', 'axis x')
+        .attr("transform", "translate(40," + 468 + ")")
+        .call(xAxis);
+    
+    svg.append('g')
+        .attr('class', 'axis y')
+        .attr("transform", "translate(35," + 10 + ")")
+        .call(yAxis);
+
+    // bind context menu
+    var onContextMenu = [{
+        title: '<i class="fa fa-users"></i> Create Group with Selection',
+        action: function(data, i) {
+            var spoints = $('.selected');
+            var stuids = [];
+            for (var i=0; i<spoints.length; i++) {
+                var stuid = $(spoints[i]).attr('stuid').substring(1);
+                stuids.push(stuid);
+            }
+            dbg('found ' + spoints.length + ' selected points.');
+            create_temporary_group(stuids, cfg.scatterchart.x, cfg.scatterchart.y);
+        }
+    }, {
+        title: '<i class="fa fa-magic"></i> Create Group with Others',
+        action: function(data, i) {
+            dbg('others the selection area');
+        }
+    }];
+    
+    // draw dots here
+    var dot = svg.selectAll('.stu-point')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr({
+            'class': 'stu-point',
+            'id': function(d, i) { return 's' + d[0]; },
+            // cost me 1 hour to fix this bug !!! why I use stuid ???
+            'stuid': function(d, i) { return 's' + d[0]; },  
+            cx: function(d, i) { return xRange(d[1]) + 40; },
+            cy: function(d, i) { return yRange(d[2]) + 10; },
+            r: 1
+        });
+
+    // draw X axis label
+    svg.append("text")
+        .attr("x", 260)
+        .attr("y", 495)
+        .style("text-anchor", "middle")
+        .text(cfg.scatterchart.indicator[cfg.scatterchart.x].label);
+    // draw Y axis label
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -235)
+        .attr("y", 10)
+        .style("text-anchor", "middle")
+        .text(cfg.scatterchart.indicator[cfg.scatterchart.y].label);
+
+    // selection tool
+    var coords = [];
+    var border = d3.svg.line();
+
+    var drawLine = d3.svg.line();;
+    var drawBorder = function(isTerminator) {
+        layer_axis.selectAll("path").remove();
+        layer_axis.append("path")
+            .attr({
+                'class': 'c-border',
+                d: drawLine(coords)
+            })
+            .on('click', function() { 
+                dbg('* clicked'); 
+            })
+            .on('contextmenu', d3.contextMenu(onContextMenu));
+
+        if (isTerminator) {
+            // layer_axis.select("#terminator").remove();
+            layer_axis.append("path").attr({
+                'class': 'c-border',
+                id: "terminator",
+                d: drawLine([coords[0], coords[coords.length-1]])
+            });
+        }
+    };
+
+    var pointInPolygon = function (point, vs) {
+        // ray-casting algorithm based on
+        // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+        var xi, xj, i, intersect,
+            x = point[0],
+            y = point[1],
+            inside = false;
+        for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+            xi = vs[i][0],
+            yi = vs[i][1],
+            xj = vs[j][0],
+            yj = vs[j][1],
+            intersect = ((yi > y) != (yj > y))
+                && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+        return inside;
+    };
+
+    var layer_axis = svg.append('g');
+
+    var onDragStart = function() {
+        if (d3.event.sourceEvent.which == 1) {
+            // console.log(d3.event);
+            coords = [];
+            layer_axis.selectAll("path").remove();
+        }
+    };
+    
+    var onDragMove = function() {
+        if (d3.event.sourceEvent.which == 1) {
+            dot.classed("selected", false);
+            coords.push(d3.mouse(this));
+            dot.each(function(d, i) {
+                point = [d3.select(this).attr("cx"), d3.select(this).attr("cy")];
+                if (pointInPolygon(point, coords)) {
+                    d3.select(this).classed("selected", true)
+                }
+            });
+            drawBorder();
+        }
+        
+    };
+
+    var onDragEnd = function() {
+        if (d3.event.sourceEvent.which == 1) {
+            drawBorder(true);
+        }
+    };
+
+    var drag = d3.behavior.drag()
+        .on("dragstart", onDragStart)
+        .on("drag", onDragMove)
+        .on("dragend", onDragEnd);
+
+    svg.call(drag);
+
+}
+
+function init_axis_selector() {
+    var tpl_opt = '<option value="{0}" {2}>{0}: {1}</option>';
+    $('#scatter-x').html('');
+    $('#scatter-y').html('');
+    var idxes = Object.keys(cfg.scatterchart.indicator);
+    for (var i = 0; i < idxes.length; i++) {
+        var idx = idxes[i];
+        // add the x
+        var x_opt_selected = '';
+        if (idx == cfg.scatterchart.x) { x_opt_selected = 'selected'; }
+        $('#scatter-x').append(tpl_opt.f(idx, cfg.scatterchart.indicator[idx].label, x_opt_selected));
+        // add the y
+        var y_opt_selected = '';
+        if (idx == cfg.scatterchart.y) { y_opt_selected = 'selected'; }
+        $('#scatter-y').append(tpl_opt.f(idx, cfg.scatterchart.indicator[idx].label, y_opt_selected));
+    }
+}
+
+
+function on_check_group(evt) {
+    // check the count
+    // console.log(evt);
+    var total_checked_gps = $('input:checkbox:checked').length;
+
+    if (total_checked_gps > cfg.group.count_limit) {
+        $(evt).attr('checked', false);
+        dbg('total checked ' + total_checked_gps + ', but reduced to ' + (total_checked_gps-1));
+        return false;
+    }
+
+    var group_names = [];
+    $('input:checkbox:checked').each(function() {
+        group_names.push($(this).attr('id').split('-')[3]);
+    });
+    // bind groups to the GLS
+    gls.checked_group_names = group_names;
+    dbg('cked groups: ' + gls.checked_group_names);
+
+    return true;
+}
+
+/**
+ * Clear the group boxcharts
+ */ 
+function clear_groups_boxcharts() {
+    for (let i = 0; i < group_boxcharts.length; i++) {
+        const gbc = group_boxcharts[i];
+        if (gbc != null) {
+            // gbc.dispose();
+            // gbc = null;
+        }
+    }
+    $('.group-boxchart').html('');
+    dbg('cleared all boxcharts');
+}
+
+function get_checked_groups_details() {
+    var groups = [];
+    for (var i = 0; i < gls.group_list.length; i++) {
+        var group = gls.group_list[i];
+        if (gls.checked_group_names.includes(group.name)) {
+            groups.push(group);
+        }
+    }
+    return groups;
+}
+
+function explore_checked_groups() {
+    var groups = get_checked_groups_details();
+
+    // mark the checked group in list
+    mark_groups_list_on(groups);
+
+    // mark the students in checked group on scatter
+    mark_groups_scattercharts_on(groups);
+
+    // show boxchart
+    draw_groups_boxcharts(groups);
+
+    // show calchart
+    draw_groups_calcharts(groups);
+
+    // change the flag
+    gls.flag.isExploring = true;
+}
+
+function mark_groups_list_on(groups) {
+    $('.gpi-name').attr('class', 'gpi-name');
+    for (var i = 0; i < gls.checked_group_names.length; i++) {
+        var group_name = gls.checked_group_names[i];
+        $('#gpi-name-' + group_name)
+            .attr('class', 'gpi-name')
+            .toggleClass('gp-bgclr-'+i);
+    }
+    dbg('marked groups on group list');
+}
+
+function on_over_calchart(obj) {
+    var calchart = $(obj);
+    var stuid = calchart.attr('id').split('-')[1];
+    // highlight the student
+    $('circle#s'+stuid).attr('r', 4);
+    // dbg('on over calchart: ' + stuid);
+}
+
+function on_out_calchart(obj) {
+    var calchart = $(obj);
+    var stuid = calchart.attr('id').split('-')[1];
+    // un-highlight the student
+    $('circle#s'+stuid).attr('r', 2);
+    // dbg('on out calchart: ' + stuid);
+}
+
+function mark_groups_scattercharts_on(groups) {
+    // mark the students in checked group on scatter
+    $('circle.stu-point').attr('class', 'stu-point').attr('r', 1);
+    for (var i = 0; i < groups.length; i++) {
+        var group = groups[i];
+        for (var j = 0; j < group.stuids.length; j++) {
+            var stuid = group.stuids[j];
+            $('circle#s'+stuid).toggleClass('gp-'+i).attr('r', 2);
+        }
+    }
+    dbg('marked groups on the scatter chart');
+}
+
+
+function mark_groups_list_off() {
+    $('.gpi-name').attr('class', 'gpi-name');
+    dbg('marked groups off the scatter chart');
+}
+
+
+function mark_groups_scattercharts_off() {
+    $('circle.stu-point').attr('class', 'stu-point').attr('r', 1);
+    dbg('marked groups off the scatter chart');
+}
+
+function draw_groups_boxcharts(groups) {
+    // in case the groups is []
+    if (groups.length == 0) {
+        return;
+    }
+    // reverse the group for show
+    // groups.reverse();
+    // init, get the group datas
+    var all_group_details = [];
+    for (var i=0; i<groups.length; i++) {
+        var group = groups[i];
+        var group_details = get_group_detals(group);
+        all_group_details.push(group_details);
+    }
+    // then, loop on the index, increase chart_seq when drawn
+    var chart_seq = 0;
+    for (var i=0; i<cfg.boxchart.indicators.length; i++) {
+        var idx = cfg.boxchart.indicators[i];
+        // ignore the current x, y in scatter
+        if (idx == cfg.scatterchart.x || 
+            idx == cfg.scatterchart.y) {
+            dbg('skipped drawing box chart on ' + idx);
+            continue;
+        }
+        if (chart_seq >= cfg.boxchart.max_num_boxes) {
+            break;
+        }
+        var chart_data = {
+            idx: idx,
+            data: [],
+            param: {
+                yticklabels: []
+            }
+        };
+        for (var j=0; j<groups.length; j++) {
+            var group = groups[j];
+            var group_details = all_group_details[j];
+
+            chart_data.param.yticklabels.push(group.name);
+            chart_data.data.push(group_details.idx_vals[idx]);
+        }
+        // draw
+        draw_group_boxchart(chart_seq, chart_data);
+        chart_seq += 1;
+    }
+}
+
+function draw_group_boxchart(chart_seq, chart_data) {
+    // prepare data
+    var boxplotdata = echarts.dataTool.prepareBoxplotData(
+        chart_data.data, 
+        { layout: 'vertical' }
+    );
+    // prepare the chart
+    if (group_boxcharts[chart_seq] != null) {
+        group_boxcharts[chart_seq].dispose();
+        group_boxcharts[chart_seq] = null;
+    }
+    var chart_domid = 'group-boxchart-'+chart_seq;
+    dbg('draw box chart '+ chart_data.idx +' on DOM ' + chart_domid);
+
+    group_boxcharts[chart_seq] = echarts.init(
+        document.getElementById(chart_domid));
+
+    dbg('seq ' + chart_seq + ' inited');
+    var option = {
+        grid: {
+            top: '2%',
+            left: '3%',
+            right: '3%',
+            bottom: '15%'
+        },
+        tooltip: {
+            trigger: 'item',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        xAxis: {
+            type: 'value',
+            name: chart_data.idx,
+            nameLocation: 'center',
+            nameGap: 16,
+            nameTextStyle: {
+                fontSize: 8,
+                fontWeight: 'bold'
+            },
+            splitLine: {
+                show: true
+            },
+            splitArea: {
+                show: true
+            },
+            axisLabel: {
+                fontSize: 8
+            }
+        },
+        yAxis: {
+            type: 'category',
+            data: chart_data.param.yticklabels,
+            show: false
+        },
+        series: [{
+            name: 'boxplot',
+            type: 'boxplot',
+            data: boxplotdata.boxData,
+            itemStyle: {
+                color: 'white',
+                borderColor: 'black'
+            },
+            tooltip: {
+                formatter: function (param) {
+                    var group_seq = gls.checked_group_names.indexOf(name);
+                    return [
+                        '<span class="gbtip-head">Group <span class="gp-bgclr-'+group_seq+'">'   + param.name + ': </span></span>',
+                        '<span class="gbtip-item">Upper: </span> <span class="gbtip-value">'     + param.data[5].toFixed(2) + '</span>',
+                        '<span class="gbtip-item">Q3: </span> <span class="gbtip-value">'        + param.data[4].toFixed(2) + '</span>',
+                        '<span class="gbtip-item">Median: </span> <span class="gbtip-value"><b>' + param.data[3].toFixed(2) + '</b></span>',
+                        '<span class="gbtip-item">Q1: </span> <span class="gbtip-value">'        + param.data[2].toFixed(2) + '</span>',
+                        '<span class="gbtip-item">Lower: </span> <span class="gbtip-value">'     + param.data[1].toFixed(2) + '</span>'
+                    ].join('<br/>')
+                }
+            }
+        },{
+            name: 'outlier',
+            type: 'scatter',
+            data: boxplotdata.outliers,
+            symbolSize: 3,
+            itemStyle: {
+                color: function(param) { 
+                    return cfg.group.colors[param.data[1]]; 
+                }
+            }
+        }]
+    };
+
+    group_boxcharts[chart_seq].setOption(option);
+
+}
+
+/**
+ * Clear the groups calcharts
+ */
+function clear_groups_calcharts() {
+    // clear the title
+    $('#compare-group-title').html('');
+    // clear the body lanes
+    $('.compare-group-lane').html('');
+}
+
+/**
+ * Draw groups calcharts by groups
+ */
+function draw_groups_calcharts(groups) {
+    // prepare, clear
+    clear_groups_calcharts();
+    // first, the titles
+    draw_groups_calcharts_titles(groups);
+
+    // then, the bodies
+    for (var i = 0; i < groups.length; i++) {
+        var group = groups[i];
+        draw_group_calchart(i, group);
+    }
+    dbg('drawn group calcharts');
+}
+
+/**
+ * Draw the title line of group calchart
+ */
+function draw_groups_calcharts_titles(groups) {
+    for (var i = 0; i < groups.length; i++) {
+        var group = groups[i];
+        var row = tpl_groupcal_title.f(
+            i,
+            group.name + '.' + group.nick,
+            group.stuids.length
+        );
+        $('#compare-group-title').append(row);
+    }
+    dbg('drawn group calchart titles');
+}
+
+function draw_group_calchart(group_seq, group) {
+    for (var i = 0; i < group.stuids.length; i++) {
+        var stuid = group.stuids[i];
+        var stu = dt.stus[stuid];
+        
+        var row = tpl_groupcal_calchart.f(
+            stuid, 
+            (stu.gp - 1)
+        );
+
+        $('#compare-group-lane-' + group_seq).append(row);
+    }
+}
+
+function load_data() {
+    var courseid = '161';
+    var year = '2015';
+
+    $.get(
+        cfg.url.loaddata.f(courseid, year),
+        {courseid:courseid, year:year},
+        function(d) {
+            dt.raw = d.data;
+            dbg('loaded data: ' + dt.raw.length);
+            // update the dt structure
+            // add a stu dict for quick access
+            dt['stus'] = {};
+            for (var i=0; i<dt.raw.length; i++) {
+                var stu = dt.raw[i];
+                dt.stus[stu.stuid] = stu;
+            }
+            dbg('built stu dict')
+            // update the groups
+            gls.group_list = d.groups;
+            dbg('built group_list')
+
+            // draw charts
+            draw_scatterchart();
+
+            // draw the group list, at this moment, 
+            // only saved groups are drawn
+            draw_groups_listpanel();
+
+        }, 'json'
+    );
+}
+
+$(document).ready(function(){
+    dbg('init page');
+    init_axis_selector();
+});
+
+$(document).ajaxError(
+    function(event,  xhr,options, exc) {
+        if (xhr.status == 'undefined'){
+            msg('Undefined Error', 'error');
+            return;
+        }
+        switch (xhr.status) {
+            case 404:
+                msg('Data not found', 'error');
+                break;
+        }
+    }
+);
+</script>
+
+</body>
+</html>
