@@ -3,11 +3,17 @@ A visualization tool for exploring the time management of online learning activi
 
 https://hehuan2112.github.io/LearnerExp
 
-This GitHub project is the front-end part extracted from the learning management system (LMS) from our school. For demonstration purpose, we prepared some sample data from the real dataset. The student identification information are removed from the sample data. Since the backend part of LearnerExp system is closely related to our LMS, we cannot open its source code separately. As a result, some functions in this demo is not available, such as loading other datasets, saving custom groups, exporting statistics, etc.
-
-# Demo Paper in WWW 2019
-
+This GitHub project is the front-end part extracted from the learning management system (LMS) from our school. Since the backend part of LearnerExp system is closely related to our LMS, we cannot open its source code separately. As a result, some functions in this demo is not available, such as loading other datasets, saving custom groups, exporting statistics, etc.
 
 # Sample Data
+For demonstration purpose, we prepared some sample data from the real dataset. The student identification information are removed from the sample data. 
+
+# Demo Paper in WWW 2019
+The demo paper can be found here:
+
+> http://dl.acm.org/
+
+If you find our paper or this demo useful for your research, please cite:
+
 
 

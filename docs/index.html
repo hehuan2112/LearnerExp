@@ -1118,7 +1118,7 @@ $(document).ready(function(){
 });
 
 $(document).ajaxError(
-    function(event,  xhr,options, exc) {
+    function(event, xhr, options, exc) {
         if (xhr.status == 'undefined'){
             msg('Undefined Error', 'error');
             return;
