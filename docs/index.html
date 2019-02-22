@@ -769,7 +769,7 @@ function on_check_group(evt) {
     var total_checked_gps = $('input:checkbox:checked').length;
 
     if (total_checked_gps > cfg.group.count_limit) {
-        $(evt).attr('checked', false);
+        $(evt).prop('checked', false);
         dbg('total checked ' + total_checked_gps + ', but reduced to ' + (total_checked_gps-1));
         return false;
     }
